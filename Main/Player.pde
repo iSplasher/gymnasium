@@ -1,12 +1,10 @@
-
-
 class Player extends Man {
   char[] playerKeys;
 
   Player(Game g, Map m) {
     super(g, m);
     pos.x = width/2;
-    
+    type = ObjectType.PLAYER;
     // husk! 0 = op, 1 = venstre, 2 = højre
     if (game.id == 1) {
       this.playerKeys = new char[] {'w', 'a', 'd'};

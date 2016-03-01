@@ -1,4 +1,5 @@
 abstract class Man {
+  ObjectType type;
   Game game;
   Direction direction;
   Map map;
@@ -24,7 +25,6 @@ abstract class Man {
     newX += velocity.x;
     newY += velocity.y;
     
-    println(newX, pos.x, velocity.x, isJumping);
     if (!map.isTouchingBlock(new PVector(pos.x, newY), size)) {
       pos.y = newY;
     } else {

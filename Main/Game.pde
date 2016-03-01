@@ -14,7 +14,7 @@ class Game {
       minY = height/2;
       maxY = height;
     }
-    map = new Map(minY, maxY);
+    map = new Map(this, minY, maxY);
     player = new Player(this, map);
   }
 
@@ -30,4 +30,10 @@ enum Direction {
   NO_D,
   UP_D,
   DOWN_D
+}
+
+enum ObjectType {
+  MONSTER,
+  PLAYER,
+  OBJECTIVE
 }

@@ -1,4 +1,5 @@
 class Map {
+  Game game;
   color background = color(5, 86, 255);
   ArrayList<Man> movingObjects = new ArrayList<Man>();
   ArrayList<Block> blocks = new ArrayList<Block>();
@@ -8,7 +9,8 @@ class Map {
   PVector blockSize;
   PVector blockCount = new PVector(30, 15);
   
-  Map(int mY, int maY) {
+  Map(Game g, int mY, int maY) {
+   game = g;
    minY = mY;
    maxY = maY;
    mapSize = new PVector(width, maxY - minY);
@@ -42,7 +44,16 @@ class Map {
             blocks.add(new Block(this, x, minY+y));
             break;
           case '2':
-            // monster her
+            movingObjects.add(new Monster(x, minY+y-blockSize.y, MonsterType.WALKING, game, this));
+            break;
+          case '3':
+            movingObjects.add(new Monster(x, minY+y-blockSize.y, MonsterType.JUMPING, game, this));
+            break;
+          case '4':
+            movingObjects.add(new Objective(x, minY+y-blockSize.y, ObjectiveType.URAN, game, this));
+            break;
+          case '5':
+            movingObjects.add(new Objective(x, minY+y-blockSize.y, ObjectiveType.THORIUM, game, this));
             break;
         }
         ++cX;
