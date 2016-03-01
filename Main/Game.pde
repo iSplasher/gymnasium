@@ -20,22 +20,14 @@ class Game {
 
   void draw() {
     map.draw();
-    player.handleState();
     player.draw();
   }
 }
-
-enum ManState {
-    JUMPING,
-    STANDING,
-    WALKING,
-    DUCKING
-  }
   
 enum Direction {
   LEFT_D,
   RIGHT_D,
   NO_D,
-  TOP_D,
-  BOTTOM_D
+  UP_D,
+  DOWN_D
 }

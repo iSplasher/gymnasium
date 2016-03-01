@@ -2,6 +2,7 @@ int brickSize = 32;
 Game game1, game2;
 void setup(){
   //fullScreen(2);
+  frameRate(60);
   size(800, 600); //size(1280,1024);
   game1 = new Game(1);
   game2 = new Game(2);

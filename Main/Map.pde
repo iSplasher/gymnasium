@@ -52,6 +52,13 @@ class Map {
   }
   }
   
+  boolean intersect(PVector pos1, PVector size1, PVector pos2, PVector size2) {
+  return (pos1.x <= pos2.x + size2.x &&
+          pos2.x <= pos1.x + size1.x &&
+          pos1.y <= pos2.y + size2.y &&
+          pos2.y <= pos1.y + size1.y);
+  }
+  
   boolean isTouching(float x, float y) {
     for (Man m : movingObjects) {
       if (x > m.pos.x && x < m.pos.x+m.size.x && y > m.pos.y && y < m.pos.y+m.size.y) {
@@ -61,10 +68,10 @@ class Map {
     return false;
   }
   
-  boolean isTouchingBlock(float x, float y){
+  boolean isTouchingBlock(PVector pos, PVector size){
     
     for (Block b : blocks) {
-      if (b.collision(x,y)) {
+      if (intersect(pos, size, b.pos, b.size)) {
         return true;
       }
     }
@@ -78,7 +85,7 @@ class Map {
       b.draw();
     }
     for (Man m : movingObjects) {
-      m.handleState();
+      m.handleMovement();
       m.draw();
     }
   }

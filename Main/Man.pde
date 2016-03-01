@@ -1,84 +1,63 @@
 abstract class Man {
   Game game;
-  ManState state;
   Direction direction;
   Map map;
   PVector size = new PVector(30, 30);
   PVector pos;
-  PVector velocity = new PVector(5, 5);
-  PVector acceleration = new PVector(1.2, 1.1);
-  float jumpHeight = 5;
-  float jumpFrame;
+  PVector velocity = new PVector(0, 0);
+  float gravity = 0.5f;
+  boolean isJumping = false;
+  float jumpHeight = 10f;
   
   Man(Game g, Map m) {
     game = g;
     map = m;
-    pos = new PVector(0, g.maxY-map.blockSize.y);
-    state = ManState.STANDING;
+    pos = new PVector(0, g.maxY-map.blockSize.y-size.y);
     direction = Direction.NO_D;
   }
   
-  void move(Direction d) {
+  void move() {
+    
+    velocity.y += gravity;
     float newX = pos.x;
-    switch(d) {
-      case LEFT_D:
-        newX -= velocity.x * acceleration.x;
-        break;
-      case RIGHT_D:
-        newX += velocity.x * acceleration.x;
-      break;
+    float newY = pos.y;
+    newX += velocity.x;
+    newY += velocity.y;
+    
+    println(newX, pos.x, velocity.x, isJumping);
+    if (!map.isTouchingBlock(new PVector(pos.x, newY), size)) {
+      pos.y = newY;
+    } else {
+      velocity.y = 0;
+      isJumping = false;
     }
     
-    if (!map.isTouchingBlock(newX, pos.y)) {
+    if (!map.isTouchingBlock(new PVector(newX, pos.y), size)) {
       pos.x = newX;
     }
-  }
-  
-  Direction collision() {
-    // left
-    if (map.isTouching(pos.x, pos.y+(size.y/2))) {
-      return Direction.LEFT_D;
-    }
-    // top
-    if (map.isTouching(pos.x+(size.x/2), pos.y)) {
-      return Direction.TOP_D;
-    }
-    // right
-    if (map.isTouching(pos.x+size.x, pos.y+(size.y/2))) {
-      return Direction.RIGHT_D;
-    }
-    // bottom
-    if (map.isTouching(pos.x+(size.x/2), pos.y+size.y)) {
-      return Direction.BOTTOM_D;
-    }
     
-    return Direction.NO_D;
   }
   
-  void handleState(){
-    float realY = pos.y;
-    switch(state) {
-      case WALKING:
-        move(direction);
+  void jump() {
+    if (!isJumping) {
+          isJumping = true;
+          velocity.y = -jumpHeight;
+     }
+  }
+  
+  void handleMovement(){
+    switch(direction) {
+      case RIGHT_D:
+        velocity.x = 10;
         break;
-      case JUMPING:
-         float newY = realY - sin(radians(this.jumpFrame)) * jumpHeight;
-         if (map.isTouchingBlock(pos.x, realY)) {
-           this.jumpFrame = this.jumpFrame < 90 ? 91 : this.jumpFrame;
-         } else {
-           realY = newY;
-         }
-         this.jumpFrame += velocity.y;
-         if (this.jumpFrame > 180) {
-           this.jumpFrame = 0;
-           state = ManState.STANDING;
-         }
-         move(direction);
-         break;
-      default:
+      case LEFT_D:
+        velocity.x = -10;
+        break;
+      case NO_D:
+        velocity.x = 0;
         break;
     }
-    pos.y = realY;
+   move();
   }
   
   abstract void draw();
