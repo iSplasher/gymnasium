@@ -8,6 +8,6 @@ class Block {
   
   void draw() {
     fill(255, 0, 0);
-    rect(pos.x, pos.y, size.x, size.y);
+    image(blockImg, pos.x, pos.y);
   }
 }

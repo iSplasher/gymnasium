@@ -1,7 +1,8 @@
 class Map {
   Game game;
-  color background = color(5, 86, 255);
+  color background = color(5, 86, 255, 150);
   ArrayList<Man> movingObjects = new ArrayList<Man>();
+  ArrayList<Man> objectsToRemove = new ArrayList<Man>();
   ArrayList<Block> blocks = new ArrayList<Block>();
   int minY;
   int maxY;
@@ -15,6 +16,10 @@ class Map {
    maxY = maY;
    mapSize = new PVector(width, maxY - minY);
    blockSize = new PVector(mapSize.x/blockCount.x, mapSize.y/blockCount.y);
+   if (!initedBlockSize) {
+     blockImg.resize((int)blockSize.x, (int)blockSize.y);
+     initedBlockSize = true;
+   }
    
    fromFile("map.txt");
   }
@@ -50,7 +55,7 @@ class Map {
             movingObjects.add(new Monster(x, minY+y-blockSize.y, MonsterType.JUMPING, game, this));
             break;
           case '4':
-            movingObjects.add(new Objective(x, minY+y-blockSize.y, ObjectiveType.URAN, game, this));
+            movingObjects.add(new Objective(x, minY+y-blockSize.y, ObjectiveType.POLONIUM, game, this));
             break;
           case '5':
             movingObjects.add(new Objective(x, minY+y-blockSize.y, ObjectiveType.THORIUM, game, this));
@@ -70,13 +75,25 @@ class Map {
           pos2.y <= pos1.y + size1.y);
   }
   
-  boolean isTouching(float x, float y) {
+  Man isTouchingPlayer(Man man) {
     for (Man m : movingObjects) {
-      if (x > m.pos.x && x < m.pos.x+m.size.x && y > m.pos.y && y < m.pos.y+m.size.y) {
-           return true;
+      if (intersect(man.pos, man.size, m.pos, m.size)) {
+          if (m.type == ObjectType.PLAYER) {
+            return m;
+          }
          }
     }
-    return false;
+    return null;
+  }
+  
+  void removeMan(Man m) {
+    objectsToRemove.add(m);
+  }
+  
+  void syncRemovedObjects() {
+    for (Man m : objectsToRemove) {
+      movingObjects.remove(m);
+    }
   }
   
   boolean isTouchingBlock(PVector pos, PVector size){
@@ -95,8 +112,11 @@ class Map {
     for (Block b : blocks) {
       b.draw();
     }
+
     for (Man m : movingObjects) {
-      m.handleMovement();
+      if (!game.textLabelOn) {
+        m.handleMovement();
+      }
       m.draw();
     }
   }

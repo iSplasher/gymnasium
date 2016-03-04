@@ -1,5 +1,5 @@
 enum ObjectiveType {
-  URAN,
+  POLONIUM,
   THORIUM
 }
 
@@ -14,19 +14,32 @@ class Objective extends Man {
     type = ObjectType.OBJECTIVE;
   }
   
+  void handleMovement() {
+    super.handleMovement();
+    Man m = map.isTouchingPlayer(this);
+    if (m != null) {
+      switch(oType) {
+        case THORIUM:
+            game.drawTextLabel("Thorium er et grundstof med symbolet Th og atomnummer 90 i det periodiske system. Thorium er et radioaktivt metal, hvilket Marie Curie fandt ud af.", 7);
+            break;
+        case POLONIUM:
+            game.drawTextLabel("Polonium er et grundstof med atomnummer 84 i det periodiske system, og har det kemiske symbol Po. Polonium er opkaldt efter Marie Curies oprindelsesland (Polen).", 7);
+            break;
+      }
+      game.nobelsAcquired += 1;
+      map.removeMan(this);
+    }
+  }
+  
   void draw() {
     fill(0, 0, 255);
-    rect(pos.x, pos.y, size.x, size.y);
-    fill(255, 255, 255);
-    String txt = "";
     switch(oType) {
-      case URAN:
-        txt = "Uran";
+      case POLONIUM:
+        image(uranImg, pos.x, pos.y);
         break;
       case THORIUM:
-        txt = "Thorium";
+      image(thoriumImg, pos.x, pos.y);
         break;
     }
-    text(txt, pos.x+2, pos.y+(size.y/2));
   }
 }

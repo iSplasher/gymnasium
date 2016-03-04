@@ -5,10 +5,11 @@ abstract class Man {
   Map map;
   PVector size = new PVector(30, 30);
   PVector pos;
+  PVector startingPos = new PVector(0, 0);
   PVector velocity = new PVector(0, 0);
   float gravity = 0.5f;
   boolean isJumping = false;
-  float jumpHeight = 10f;
+  float jumpHeight = 15f;
   
   Man(Game g, Map m) {
     game = g;
@@ -48,10 +49,10 @@ abstract class Man {
   void handleMovement(){
     switch(direction) {
       case RIGHT_D:
-        velocity.x = 10;
+        velocity.x = 3;
         break;
       case LEFT_D:
-        velocity.x = -10;
+        velocity.x = -3;
         break;
       case NO_D:
         velocity.x = 0;

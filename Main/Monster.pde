@@ -16,6 +16,7 @@ class Monster extends Man {
       direction = Direction.LEFT_D;
     }
     jumpHeight = 7;
+    size = monsterImgSize;
   }
   
   void handleMovement() {
@@ -33,10 +34,16 @@ class Monster extends Man {
     }
     
     super.handleMovement();
+    
+    Man m = map.isTouchingPlayer(this);
+    if (m != null) {
+      m.pos.x = m.startingPos.x;
+      m.pos.y = m.startingPos.y;
+    }
   }
   
   void draw() {
     fill(0, 255, 0);
-    rect(pos.x, pos.y, size.x, size.y);
+    image(monsterImg, pos.x, pos.y);
   }
 }
